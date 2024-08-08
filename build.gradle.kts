@@ -1,5 +1,8 @@
 plugins {
 	kotlin("jvm") version "2.0.0"
+	kotlin("plugin.spring") version "1.9.24"
+	id("org.springframework.boot") version "3.3.2"
+	id("io.spring.dependency-management") version "1.1.6"
 	id("org.openapi.generator") version "7.7.0"
 }
 
@@ -12,11 +15,18 @@ repositories {
 
 dependencies {
 	implementation(project(":api-client"))
+
+	implementation("org.springframework.boot:spring-boot-starter")
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation(kotlin("test"))
+	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks {
-	test {
+	withType<Test> {
 		useJUnitPlatform()
 	}
 	wrapper {
@@ -29,8 +39,17 @@ tasks {
 	}
 }
 
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
 kotlin {
 	jvmToolchain(21)
+	compilerOptions {
+		freeCompilerArgs.addAll("-Xjsr305=strict")
+	}
 }
 
 openApiGenerate {
