@@ -3,7 +3,7 @@ plugins {
 	kotlin("plugin.spring") version "1.9.24"
 	id("org.springframework.boot") version "3.3.2"
 	id("io.spring.dependency-management") version "1.1.6"
-	id("org.openapi.generator") version "7.7.0"
+	id("openapi-module-generate")
 }
 
 group = "de.jball.kotlin"
@@ -14,8 +14,6 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":api-client"))
-
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
@@ -31,11 +29,10 @@ tasks {
 	}
 	wrapper {
 		distributionType = Wrapper.DistributionType.ALL
-		gradleVersion = "8.9"
+		gradleVersion = "8.10"
 	}
-
 	compileKotlin {
-		dependsOn(openApiGenerate)
+		dependsOn("openApiGenerate")
 	}
 }
 
@@ -54,7 +51,7 @@ kotlin {
 
 openApiGenerate {
 	generatorName = "kotlin"
-	inputSpec = "$rootDir/api-client/artifactsmmo.yaml"
+	inputSpec = "$rootDir/api/artifactsmmo.yaml"
 	outputDir = "$rootDir/api-client"
 	//apiPackage = "de.jball.kotlin.artifactsmmo.client.api"
 	//modelPackage = "de.jball.kotlin.artifactsmmo.client.model"
